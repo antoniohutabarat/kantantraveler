@@ -664,6 +664,10 @@ video {
   object-fit: fill;
 }
 
+.p-8 {
+  padding: 2rem;
+}
+
 .align-middle {
   vertical-align: middle;
 }
