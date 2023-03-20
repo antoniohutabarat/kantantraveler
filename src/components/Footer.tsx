@@ -1,3 +1,3 @@
 export const Footer = () => {
-    return <div className="bg-red-500 h-[30vh]"></div>
+    return <div className="bg-[#F70012] h-[30vh]"></div>
 }

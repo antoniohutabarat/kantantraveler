@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import logoImage from "../images/logo.png";
 
 export const Header = () => {
   const menus = [
@@ -13,8 +14,8 @@ export const Header = () => {
   ];
 
   return (
-    <div className="bg-red-500 flex text-white">
-      Kantan Traveler
+    <div className="bg-[#F70012] flex text-white">
+      <img src={logoImage} className="h-[80px] border border-white rounded-full m-4"/>
       <ul className="flex">
         {menus.map((menu, index) => (
           <li key={index} className="p-8">

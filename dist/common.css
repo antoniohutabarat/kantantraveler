@@ -593,13 +593,38 @@ video {
   }
 }
 
+.m-4 {
+  margin: 1rem;
+}
+
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
 }
 
+.mx-4 {
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
 .mb-16 {
   margin-bottom: 4rem;
+}
+
+.mr-4 {
+  margin-right: 1rem;
+}
+
+.mr-8 {
+  margin-right: 2rem;
+}
+
+.ml-8 {
+  margin-left: 2rem;
+}
+
+.ml-12 {
+  margin-left: 3rem;
 }
 
 .flex {
@@ -610,12 +635,16 @@ video {
   display: grid;
 }
 
+.h-\[30vh\] {
+  height: 30vh;
+}
+
 .h-\[50vh\] {
   height: 50vh;
 }
 
-.h-\[30vh\] {
-  height: 30vh;
+.h-\[80px\] {
+  height: 80px;
 }
 
 .h-full {
@@ -624,6 +653,18 @@ video {
 
 .w-full {
   width: 100%;
+}
+
+.w-8 {
+  width: 2rem;
+}
+
+.w-3 {
+  width: 0.75rem;
+}
+
+.w-1 {
+  width: 0.25rem;
 }
 
 .grid-cols-2 {
@@ -642,34 +683,44 @@ video {
   gap: 2rem;
 }
 
+.rounded-full {
+  border-radius: 9999px;
+}
+
 .border {
   border-width: 1px;
 }
 
-.bg-red-500 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(239 68 68 / var(--tw-bg-opacity));
+.border-white {
+  --tw-border-opacity: 1;
+  border-color: rgb(255 255 255 / var(--tw-border-opacity));
 }
 
-.bg-green-500 {
+.bg-\[\#F70012\] {
   --tw-bg-opacity: 1;
-  background-color: rgb(34 197 94 / var(--tw-bg-opacity));
+  background-color: rgb(247 0 18 / var(--tw-bg-opacity));
+}
+
+.bg-gray-500 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(107 114 128 / var(--tw-bg-opacity));
 }
 
 .object-cover {
   object-fit: cover;
 }
 
-.object-fill {
-  object-fit: fill;
-}
-
 .p-8 {
   padding: 2rem;
 }
 
-.align-middle {
-  vertical-align: middle;
+.px-4 {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.text-left {
+  text-align: left;
 }
 
 .text-white {
@@ -689,4 +740,28 @@ input {
   padding-right: 0.5rem;
   padding-top: 1rem;
   padding-bottom: 1rem;
+}
+
+@media (min-width: 640px) {
+  .sm\:mx-0 {
+    margin-left: 0px;
+    margin-right: 0px;
+  }
+
+  .sm\:grid {
+    display: grid;
+  }
+
+  .sm\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .sm\:gap-8 {
+    gap: 2rem;
+  }
+
+  .sm\:px-0 {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
 }
