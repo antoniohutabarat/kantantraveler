@@ -1,7 +1,6 @@
 import "./App.css";
 import {
   BrowserRouter as Router,
-  NavLink,
   Route,
   Routes,
 } from "react-router-dom";
