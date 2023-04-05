@@ -19,9 +19,9 @@
   },
   "scripts": {
     "start:css": "npx tailwindcss -i ./src/index.css -o ./dist/common.css --watch",
-    "start": "react-scripts start",
+    "start": "REACT_APP_GOOGLE_API_KEY=AIzaSyDqmP6vOqROCxjnlsYYHiklwuK3N8fMrOE react-scripts start",
     "prebuild": "npx tailwindcss -i ./src/index.css -o ./dist/common.css",
-    "build": "GENERATE_SOURCEMAP=false react-scripts build",
+    "build": "REACT_APP_GOOGLE_API_KEY=AIzaSyDqmP6vOqROCxjnlsYYHiklwuK3N8fMrOE GENERATE_SOURCEMAP=false react-scripts build",
     "deploy": "pm2 start ./server.sh --name kt-ui",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
