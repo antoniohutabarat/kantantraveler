@@ -1,10 +1,27 @@
 import { FormEvent, useEffect, useState } from "react";
 
+type Place = {
+  address: {
+    city: string;
+    country: string;
+    country_code: string;
+    county: string;
+    postcode: string;
+    road: string;
+    hamlet: string;
+    state: string;
+    village: string;
+    town: string;
+  };
+  display_name: string;
+  expanded: boolean;
+  time: number;
+};
+
 class AutocompleteDirectionsHandler {
   map: google.maps.Map;
   originPlaceId: string;
   destinationPlaceId: string;
-  travelMode: google.maps.TravelMode;
   directionsService: google.maps.DirectionsService;
   directionsRenderer: google.maps.DirectionsRenderer;
 
@@ -12,7 +29,6 @@ class AutocompleteDirectionsHandler {
     this.map = map;
     this.originPlaceId = "";
     this.destinationPlaceId = "";
-    this.travelMode = google.maps.TravelMode.WALKING;
     this.directionsService = new google.maps.DirectionsService();
     this.directionsRenderer = new google.maps.DirectionsRenderer();
     this.directionsRenderer.setMap(map);
@@ -23,9 +39,6 @@ class AutocompleteDirectionsHandler {
     const destinationInput = document.getElementById(
       "destination-input"
     ) as HTMLInputElement;
-    const modeSelector = document.getElementById(
-      "mode-selector"
-    ) as HTMLSelectElement;
 
     // Specify just the place data fields that you need.
     const originAutocomplete = new google.maps.places.Autocomplete(
@@ -39,27 +52,13 @@ class AutocompleteDirectionsHandler {
       { fields: ["place_id"] }
     );
 
-    this.setupClickListener(
-      "changemode-walking",
-      google.maps.TravelMode.WALKING
-    );
-    this.setupClickListener(
-      "changemode-transit",
-      google.maps.TravelMode.TRANSIT
-    );
-    this.setupClickListener(
-      "changemode-driving",
-      google.maps.TravelMode.DRIVING
-    );
-
     this.setupPlaceChangedListener(originAutocomplete, "ORIG");
     this.setupPlaceChangedListener(destinationAutocomplete, "DEST");
 
-    this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(originInput);
-    this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(
-      destinationInput
-    );
-    this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(modeSelector);
+    // this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(originInput);
+    // this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(
+    //   destinationInput
+    // );
   }
 
   // Sets a listener on a radio button to change the filter type on Places
@@ -68,7 +67,6 @@ class AutocompleteDirectionsHandler {
     const radioButton = document.getElementById(id) as HTMLInputElement;
 
     radioButton.addEventListener("click", () => {
-      this.travelMode = mode;
       this.route();
     });
   }
@@ -108,7 +106,7 @@ class AutocompleteDirectionsHandler {
       {
         origin: { placeId: this.originPlaceId },
         destination: { placeId: this.destinationPlaceId },
-        travelMode: this.travelMode,
+        travelMode: google.maps.TravelMode.DRIVING,
       },
       (response, status) => {
         if (status === "OK") {
@@ -128,15 +126,9 @@ declare global {
 }
 
 export const Home = () => {
-  const recommendationCities = [
-    { name: "Minneapolis, MI", expanded: false },
-    { name: "Bismark, ND", expanded: false },
-    { name: "Billings, MO", expanded: false },
-    { name: "Spokane, WA", expanded: false },
-  ];
-
-  const [cities, setCities] =
-    useState<{ name: string; expanded: boolean }[]>(recommendationCities);
+  const maxDuration = 1800;
+  const [map, setMap] = useState<google.maps.Map>();
+  const [cities, setCities] = useState<Place[]>();
 
   useEffect(() => {
     const script = document.createElement("script");
@@ -144,12 +136,68 @@ export const Home = () => {
     script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_API_KEY}&callback=initMap&libraries=places&v=weekly`;
     script.defer = true;
 
+    window.initMap = initMap;
+
     if (!document.getElementById("googleAPIs")) {
       document.body.appendChild(script);
     }
 
-    window.initMap = initMap;
-  });
+    if (!!map) {
+      const getDirection = async () => {
+        const response = await fetch("http://localhost:3001/api/v1/direction");
+        const directions =
+          (await response.json()) as unknown as google.maps.DirectionsResult;
+
+        const onComplete = (cities: Place[]) => {
+          const handler = new AutocompleteDirectionsHandler(map);
+          handler.directionsRenderer.setDirections(directions);
+
+          setCities(cities);
+        };
+
+        directions.routes.forEach((route) => {
+          route.legs.forEach((leg) => {
+            let duration = 0;
+
+            getCities([...leg.steps], duration, maxDuration, onComplete);
+          });
+        });
+      };
+
+      const getCities = (
+        steps: google.maps.DirectionsStep[],
+        duration: number,
+        maxDuration: number,
+        onComplete: (cities: Place[]) => void,
+        cities: Place[] = []
+      ) => {
+        if (steps.length > 0) {
+          const step = steps.shift();
+
+          if (step) {
+            duration += step.duration.value;
+
+            if (duration < maxDuration) {
+              getCities(steps, duration, maxDuration, onComplete, cities);
+            } else {
+              getAddress(
+                step.start_location.lat as unknown as number,
+                step.start_location.lng as unknown as number
+              ).then((response: Place) => {
+                response.time = duration;
+                cities.push(response);
+                getCities(steps, 0, maxDuration, onComplete, cities);
+              });
+            }
+          }
+        } else {
+          onComplete(cities);
+        }
+      };
+
+      getDirection();
+    }
+  }, [map]);
 
   const initMap = () => {
     const map = new google.maps.Map(
@@ -161,7 +209,15 @@ export const Home = () => {
       }
     );
 
-    new AutocompleteDirectionsHandler(map);
+    setMap(map);
+  };
+
+  const getAddress = async (lat: number, lng: number): Promise<any> => {
+    const reverseGEOURL = `https://geocode.maps.co/reverse?lat=${lat}&lon=${lng}`;
+    const response = await fetch(reverseGEOURL);
+    const address = await response.json();
+
+    return address;
   };
 
   return (
@@ -170,77 +226,127 @@ export const Home = () => {
         Plan your travel with ease with our great recommendation.
       </div>
       <div className="container mx-auto mb-16">
-        <div className="grid grid-cols-2 gap-8 mx-4 sm:mx-0">
-          <div>
+        <div className="hidden">
+          <div className="grid grid-cols-2 gap-8 mx-4 sm:mx-0">
             <div>
-              <label htmlFor="origin">Origin</label>
-              <input id="origin" name="origin" placeholder="Chicago, IL" />
+              <div>
+                <label htmlFor="origin-input">Origin</label>
+                <input
+                  id="origin-input"
+                  name="origin-input"
+                  placeholder="Chicago, IL"
+                />
+              </div>
+              <div>
+                <label htmlFor="destination-input">Destination</label>
+                <input
+                  id="destination-input"
+                  name="destination-input"
+                  placeholder="Seattle, WA"
+                />
+              </div>
             </div>
             <div>
-              <label htmlFor="destination">Destination</label>
-              <input
-                id="destination"
-                name="destination"
-                placeholder="Seattle, WA"
-              />
-            </div>
-          </div>
-          <div>
-            <div>
-              <label htmlFor="departureDate">Departure Date</label>
-              <input id="departureDate" name="departureDate" type="date" />
-            </div>
-            <div>
-              <label htmlFor="arrivalDate">Arrival Date</label>
-              <input id="arrivalDate" name="arrivalDate" type="date" />
+              <div>
+                <label htmlFor="departureDate">Departure Date</label>
+                <input id="departureDate" name="departureDate" type="date" />
+              </div>
+              <div>
+                <label htmlFor="arrivalDate">Arrival Date</label>
+                <input id="arrivalDate" name="arrivalDate" type="date" />
+              </div>
             </div>
           </div>
         </div>
         <div className="sm:grid sm:grid-cols-2 sm:gap-8 mx-4 sm:mx-0">
           <div>
             Map
-            <div className="h-[50vh] w-full">
-              <div className="h-[50vh]" id="map" />
+            <div className="min-h-[50vh] w-full">
+              <div className="min-h-[50vh]" id="map" />
             </div>
           </div>
           <div>
             Cities
-            <div className="border h-[50vh] w-full">
-              <ul>
-                {cities.map((city, index) => (
-                  <li key={index}>
-                    <button
-                      onClick={(e: FormEvent<HTMLButtonElement>) => {
-                        e.preventDefault();
+            <div className="border min-h-[50vh] w-full">
+              {cities && (
+                <ul>
+                  {cities.map((city, index) => (
+                    <li key={index} className="mb-1">
+                      <button
+                        className="border border-[#F70012] rounded-md w-full flex justify-between p-4 bg-[#F70012] text-white"
+                        onClick={(e: FormEvent<HTMLButtonElement>) => {
+                          e.preventDefault();
 
-                        const updatedCities = cities.map((aCity, i) => {
-                          if (i === index) {
-                            return { ...aCity, expanded: !aCity.expanded };
-                          } else {
-                            return aCity;
-                          }
-                        });
-                        setCities(updatedCities);
-                      }}
-                    >
-                      {city.expanded ? (
-                        <i className="fa-sharp fa-solid fa-chevron-down mr-4"></i>
-                      ) : (
-                        <i className="fa-solid fa-chevron-right mr-4"></i>
+                          const updatedCities = cities.map((aCity, i) => {
+                            if (i === index) {
+                              return { ...aCity, expanded: !aCity.expanded };
+                            } else {
+                              return aCity;
+                            }
+                          });
+                          setCities(updatedCities);
+                        }}
+                      >
+                        <span>
+                          {city.address.city ||
+                            city.address.town ||
+                            city.address.village ||
+                            city.address.county ||
+                            city.address.road ||
+                            city.address.hamlet}
+                          , {city.address.state} ({city.time} seconds)
+                        </span>
+                        <span>
+                          {city.expanded ? (
+                            <i className="fa-solid fa-chevron-up"></i>
+                          ) : (
+                            <i className="fa-solid fa-chevron-down"></i>
+                          )}
+                        </span>
+                      </button>
+                      {city.expanded && (
+                        <ul className="border-x border-b border-[#F70012]">
+                          <li className="border-b">
+                            <a
+                              className="flex justify-between p-4"
+                              target="_blank"
+                              rel="noreferrer"
+                              href={`https://www.yelp.com/search?find_desc=&find_loc=${encodeURIComponent(
+                                city.display_name
+                              )}`}
+                            >
+                              <span className="text-ellipsis whitespace-nowrap overflow-hidden">
+                                Yelp - The 10 Best Places near{" "}
+                                {city.display_name}
+                              </span>
+                              <span>
+                                <i className="fa-solid fa-chevron-right" />
+                              </span>
+                            </a>
+                          </li>
+                          <li>
+                            <a
+                              className="flex justify-between p-4"
+                              target="_blank"
+                              rel="noreferrer"
+                              href={`https://www.airbnb.com/s/${encodeURIComponent(
+                                city.display_name
+                              )}/homes`}
+                            >
+                              <span className="text-ellipsis whitespace-nowrap overflow-hidden">
+                                Airbnb - Over 1,000 homes in {city.display_name}
+                              </span>
+                              <span>
+                                <i className="fa-solid fa-chevron-right" />
+                              </span>
+                            </a>
+                          </li>
+                        </ul>
                       )}
-                      {city.name}
-                    </button>
-                    {city.expanded && (
-                      <ul className="text-left">
-                        <li className="ml-8">Airbnb</li>
-                        <li className="ml-8">Hotels</li>
-                        <li className="ml-8">Gas Stations</li>
-                        <li className="ml-8">Restaurants</li>
-                      </ul>
-                    )}
-                  </li>
-                ))}
-              </ul>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           </div>
         </div>
