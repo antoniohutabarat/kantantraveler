@@ -144,7 +144,7 @@ export const Home = () => {
 
     if (!!map) {
       const getDirection = async () => {
-        const response = await fetch("http://3.133.108.78/:3001/api/v1/direction");
+        const response = await fetch("http://3.133.108.78:3001/api/v1/direction");
         const directions =
           (await response.json()) as unknown as google.maps.DirectionsResult;
 
