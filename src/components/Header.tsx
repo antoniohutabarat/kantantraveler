@@ -14,11 +14,11 @@ export const Header = () => {
   ];
 
   return (
-    <div className="bg-[#F70012] text-white">
+    <div className="border-b shadow-md">
       <div className="container mx-auto flex">
         <img
           src={logoImage}
-          className="h-[80px] border border-white bg-white rounded-lg m-4"
+          className="h-[80px] m-4"
         />
         {/* <ul className="flex">
           {menus.map((menu, index) => (

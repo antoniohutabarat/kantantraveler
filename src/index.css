@@ -2,8 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 label {
-    @apply w-[200px] block
+  @apply w-[200px] block;
 }
 input {
-    @apply border rounded-md px-2 py-4
+  @apply border rounded-md px-2 py-4;
+}
+
+h2 {
+  @apply font-bold;
 }
