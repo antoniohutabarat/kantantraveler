@@ -14,15 +14,20 @@ export const Header = () => {
   ];
 
   return (
-    <div className="bg-[#F70012] flex text-white">
-      <img src={logoImage} className="h-[80px] border border-white bg-white rounded-lg m-4"/>
-      <ul className="flex">
-        {menus.map((menu, index) => (
-          <li key={index} className="p-8">
-            <NavLink to={menu.path}>{menu.title}</NavLink>
-          </li>
-        ))}
-      </ul>
+    <div className="bg-[#F70012] text-white">
+      <div className="container mx-auto flex">
+        <img
+          src={logoImage}
+          className="h-[80px] border border-white bg-white rounded-lg m-4"
+        />
+        {/* <ul className="flex">
+          {menus.map((menu, index) => (
+            <li key={index} className="p-8">
+              <NavLink to={menu.path}>{menu.title}</NavLink>
+            </li>
+          ))}
+        </ul> */}
+      </div>
     </div>
   );
 };
