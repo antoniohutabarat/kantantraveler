@@ -15,11 +15,12 @@ export const Header = () => {
 
   return (
     <div className="border-b shadow-md">
-      <div className="container mx-auto flex">
+      <div className="container mx-auto flex items-center">
         <img
           src={logoImage}
-          className="h-[80px] m-4"
+          className="h-[80px] my-4"
         />
+        <span className="text-2xl font-bold ml-4 text-[#F83156]">Kantan Traveler</span>
         {/* <ul className="flex">
           {menus.map((menu, index) => (
             <li key={index} className="p-8">

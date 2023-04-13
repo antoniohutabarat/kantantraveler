@@ -8,8 +8,25 @@ const PlanFilter = () => {
   const maxDuration = 1800;
   const { map, setMap, cities, setCities } = useHomeContext();
   const [directions, setDirections] = useState<google.maps.DirectionsResult>();
+  const [mockEnabled, setMockEnabled] = useState<boolean>(true);
+  const [originPlaceId, setOriginPlaceId] = useState<string>();
+  const [destinationPlaceId, setDestinationPlaceId] = useState<string>();
 
   useEffect(() => {
+    if (!document.getElementById("googleAPIs")) {
+      const script = document.createElement("script");
+      script.id = "googleAPIs";
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_API_KEY}&libraries=places&v=weekly&callback=initMap`;
+      document.body.appendChild(script);
+
+      window.initMap = setupDirectionAutocomplete;
+    }
+    const originInput = document.getElementById("origin-input");
+
+    if (originInput?.getAttribute("autocomplete") !== "true") {
+      // setupDirectionAutocomplete();
+    }
+
     if (directions) {
       if (!cities.length) {
         const onComplete = (cities: Place[]) => {
@@ -29,24 +46,49 @@ const PlanFilter = () => {
           directionsRenderer.setMap(map);
           directionsRenderer.setDirections(directions);
         } else {
-          initMap((map) => {
-            // const handler = new AutocompleteDirectionsHandler(map);
-            // handler.directionsRenderer.setDirections(directions);
-            const directionsRenderer = new google.maps.DirectionsRenderer();
-            directionsRenderer.setMap(map);
-            directionsRenderer.setDirections(directions);
-          });
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+              (position) => {
+                initMap(position, (map) => {
+                  // const handler = new AutocompleteDirectionsHandler(map);
+                  // handler.directionsRenderer.setDirections(directions);
+                  const directionsRenderer =
+                    new google.maps.DirectionsRenderer();
+                  directionsRenderer.setMap(map);
+                  directionsRenderer.setDirections(directions);
+                });
+
+                console.log("aaaa", navigator.geolocation);
+              },
+              (e) => {
+                initMap(null, (map) => {
+                  const directionsRenderer =
+                    new google.maps.DirectionsRenderer();
+                  directionsRenderer.setMap(map);
+                  directionsRenderer.setDirections(directions);
+                });
+              }
+            );
+          } else {
+            console.log("aaaa", navigator.geolocation);
+          }
         }
       }
     }
   }, [directions, cities]);
 
-  const initMap = (onComplete: (map: google.maps.Map) => void) => {
+  const initMap = (
+    position: GeolocationPosition | null,
+    onComplete: (map: google.maps.Map) => void
+  ) => {
     const map = new google.maps.Map(
       document.getElementById("map") as HTMLElement,
       {
         mapTypeControl: false,
-        center: { lat: -33.8688, lng: 151.2195 },
+        center: {
+          lat: position?.coords.latitude || 47.8637987,
+          lng: position?.coords.longitude || -122.2780536,
+        },
         zoom: 13,
       }
     );
@@ -56,13 +98,37 @@ const PlanFilter = () => {
   };
 
   const getDirection = async () => {
-    const response = await fetch(
-      `${process.env.REACT_APP_KT_API_HOST}/api/v1/direction`
-    );
-    const directions =
-      (await response.json()) as unknown as google.maps.DirectionsResult;
+    if (true) {
+      const directionsService = new google.maps.DirectionsService();
 
-    setDirections(directions);
+      directionsService.route(
+        {
+          origin: { placeId: originPlaceId },
+          destination: { placeId: destinationPlaceId },
+          travelMode: google.maps.TravelMode.DRIVING,
+        },
+        (response, status) => {
+          console.log(response);
+          console.log(JSON.stringify(response));
+          if (status === "OK") {
+            setDirections(response);
+          }
+          // if (status === "OK") {
+          //   me.directionsRenderer.setDirections(response);
+          // } else {
+          //   window.alert("Directions request failed due to " + status);
+          // }
+        }
+      );
+    } else {
+      const response = await fetch(
+        `${process.env.REACT_APP_KT_API_HOST}/api/v1/direction`
+      );
+      const directions =
+        (await response.json()) as unknown as google.maps.DirectionsResult;
+
+      setDirections(directions);
+    }
   };
 
   const getCities = (
@@ -81,10 +147,15 @@ const PlanFilter = () => {
         if (duration < maxDuration) {
           getCities(steps, duration, maxDuration, onComplete, cities);
         } else {
-          getAddress(
-            step.start_location.lat as unknown as number,
-            step.start_location.lng as unknown as number
-          ).then((response: Place) => {
+          const lat =
+            typeof step.start_location.lat === "function"
+              ? step.start_location.lat()
+              : (step.start_location.lat as unknown as number);
+          const lng =
+            typeof step.start_location.lng === "function"
+              ? step.start_location.lng()
+              : (step.start_location.lng as unknown as number);
+          getAddress(lat, lng).then((response: Place) => {
             response.time = duration;
             cities.push(response);
             getCities(steps, 0, maxDuration, onComplete, cities);
@@ -104,8 +175,70 @@ const PlanFilter = () => {
     return address;
   };
 
+  const setupPlaceChangedListener = (
+    autocomplete: google.maps.places.Autocomplete,
+    mode: string
+  ) => {
+    autocomplete.addListener("place_changed", () => {
+      const place = autocomplete.getPlace();
+
+      if (!place.place_id) {
+        window.alert("Please select an option from the dropdown list.");
+        return;
+      }
+
+      if (mode === "ORIG") {
+        setOriginPlaceId(place.place_id);
+      } else {
+        setDestinationPlaceId(place.place_id);
+      }
+    });
+  };
+
+  const setupDirectionAutocomplete = () => {
+    const originInput = document.getElementById(
+      "origin-input"
+    ) as HTMLInputElement;
+    const destinationInput = document.getElementById(
+      "destination-input"
+    ) as HTMLInputElement;
+
+    originInput.setAttribute("autocomplete", "true");
+
+    const originAutocomplete = new google.maps.places.Autocomplete(
+      originInput,
+      { fields: ["place_id"] }
+    );
+
+    // Specify just the place data fields that you need.
+    const destinationAutocomplete = new google.maps.places.Autocomplete(
+      destinationInput,
+      { fields: ["place_id"] }
+    );
+
+    setupPlaceChangedListener(originAutocomplete, "ORIG");
+    setupPlaceChangedListener(destinationAutocomplete, "DEST");
+  };
+
   return (
     <div className="">
+      <div className="hidden">
+        Mock Request
+        <label htmlFor="enable-mock-input" className="switch">
+          <input
+            id="enable-mock-input"
+            type="checkbox"
+            checked={mockEnabled}
+            onChange={(e) => {
+              e.preventDefault();
+
+              setMockEnabled(!mockEnabled);
+            }}
+          />
+          <span className="slider round" />
+        </label>
+      </div>
+
       <div className="grid grid-cols-2 gap-8 mx-4 sm:mx-0">
         <div>
           <div className="mt-4">

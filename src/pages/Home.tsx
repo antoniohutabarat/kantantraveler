@@ -28,13 +28,7 @@ export const Home = () => {
   const [cities, setCities] = useState<Place[]>([]);
 
   useEffect(() => {
-    const script = document.createElement("script");
-    script.id = "googleAPIs";
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_API_KEY}&libraries=places&v=weekly`;
-
-    if (!document.getElementById("googleAPIs")) {
-      document.body.appendChild(script);
-    }
+    
   });
 
   return (
