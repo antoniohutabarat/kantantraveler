@@ -11,7 +11,7 @@ export const Footer = () => {
             </ul>
           </li>
         </ul>
-        <div className="mt-4">Copyright © 2023 Kantan Traveler Inc.</div>
+        <div className="mt-4">Copyright © 2023 KT Inc.</div>
       </div>
     </div>
   );
