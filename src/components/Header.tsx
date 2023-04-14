@@ -20,7 +20,7 @@ export const Header = () => {
           src={logoImage}
           className="h-[80px] my-4"
         />
-        <span className="text-2xl font-bold ml-4 text-[#F83156]">Kantan Traveler</span>
+        <span className="text-2xl font-bold ml-4 text-[#F83156]">KT</span>
         {/* <ul className="flex">
           {menus.map((menu, index) => (
             <li key={index} className="p-8">
