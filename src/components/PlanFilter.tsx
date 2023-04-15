@@ -1,7 +1,6 @@
 import { FormEvent, useEffect, useState } from "react";
 import { Place } from "../models/Place";
 import Button from "./Button";
-import AutocompleteDirectionsHandler from "../Utils/AutocompleteDirectionsHandler";
 import { useHomeContext } from "../pages/Home";
 
 const PlanFilter = () => {
@@ -171,6 +170,7 @@ const PlanFilter = () => {
     const reverseGEOURL = `https://geocode.maps.co/reverse?lat=${lat}&lon=${lng}`;
     const response = await fetch(reverseGEOURL);
     const address = await response.json();
+    console.log(address);
 
     return address;
   };
@@ -239,11 +239,12 @@ const PlanFilter = () => {
         </label>
       </div>
 
-      <div className="grid grid-cols-2 gap-8 mx-4 sm:mx-0">
-        <div>
+      <div className="sm:grid sm:grid-cols-2 sm:gap-8 mx-4 sm:mx-0">
+        <div className="sm:grid sm:grid-cols-2 sm:gap-8">
           <div className="mt-4">
             <label htmlFor="origin-input">Origin</label>
             <input
+            className="w-full"
               id="origin-input"
               name="origin-input"
               placeholder="Chicago, IL"
@@ -252,31 +253,34 @@ const PlanFilter = () => {
           <div className="mt-4">
             <label htmlFor="destination-input">Destination</label>
             <input
+            className="w-full"
               id="destination-input"
               name="destination-input"
               placeholder="Seattle, WA"
             />
           </div>
-          <div className="mt-4">
-            <Button
-              onClick={(e: FormEvent<HTMLButtonElement>) => {
-                e.preventDefault();
-                getDirection();
-              }}
-            >
-              Plan It
-            </Button>
-          </div>
         </div>
-        <div>
+        <div className="sm:grid sm:grid-cols-2 sm:gap-8">
           <div className="mt-4">
             <label htmlFor="departureDate">Departure Date</label>
-            <input id="departureDate" name="departureDate" type="date" />
+            <input className="w-full" id="departureDate" name="departureDate" type="date" />
           </div>
           <div className="mt-4">
             <label htmlFor="arrivalDate">Arrival Date</label>
-            <input id="arrivalDate" name="arrivalDate" type="date" />
+            <input className="w-full" id="arrivalDate" name="arrivalDate" type="date" />
           </div>
+        </div>
+      </div>
+      <div className="mx-4 sm:mx-0">
+        <div className="mt-4">
+          <Button
+            onClick={(e: FormEvent<HTMLButtonElement>) => {
+              e.preventDefault();
+              getDirection();
+            }}
+          >
+            Plan It
+          </Button>
         </div>
       </div>
     </div>

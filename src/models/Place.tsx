@@ -12,6 +12,8 @@ export type Place = {
     town: string;
   };
   display_name: string;
+  lat: string;
+  lon: string;
   expanded: boolean;
   time: number;
 };

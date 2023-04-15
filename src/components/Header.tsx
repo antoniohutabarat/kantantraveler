@@ -18,7 +18,7 @@ export const Header = () => {
       <div className="container mx-auto flex items-center">
         <img
           src={logoImage}
-          className="h-[80px] my-4"
+          className="h-[80px] my-4 ml-4 sm:ml-0"
         />
         <span className="text-2xl font-bold ml-4 text-[#F83156]">KT</span>
         {/* <ul className="flex">

@@ -106,6 +106,36 @@ const Stops = () => {
                                 Turo
                               </button>
                             </li>
+                            <li className="flex items-center justify-center">
+                              <button
+                                className="rounded-md w-[80%] m-4 p-4 text-[#F83156] bg-white shadow hover:shadow-[#F83156]"
+                                onClick={(e: FormEvent<HTMLButtonElement>) => {
+                                  e.preventDefault();
+
+                                  window.open(
+                                    `https://www.google.com/maps/search/Gas+Station/@${city.lat},${city.lon},13z`,
+                                    "_blank"
+                                  );
+                                }}
+                              >
+                                Gas Stations
+                              </button>
+                            </li>
+                            <li className="flex items-center justify-center">
+                              <button
+                                className="rounded-md w-[80%] m-4 p-4 text-[#F83156] bg-white shadow hover:shadow-[#F83156]"
+                                onClick={(e: FormEvent<HTMLButtonElement>) => {
+                                  e.preventDefault();
+
+                                  window.open(
+                                    `https://www.google.com/maps/search/EV+Charging+Station/@${city.lat},${city.lon},13z`,
+                                    "_blank"
+                                  );
+                                }}
+                              >
+                                EV Charging Stations
+                              </button>
+                            </li>
                           </ul>
                         )}
                       </li>
