@@ -7,7 +7,7 @@ type ButtonProperties = {
 
 const Button = ({onClick, children }: ButtonProperties) => {
   return (
-    <button className="bg-[#F83156] shadow px-8 py-4 text-white hover:shadow hover:shadow-[#F83156] hover:text-[#F83156] hover:bg-white rounded-md" onClick={onClick}>
+    <button className="bg-[#F83156] shadow px-8 py-4 text-white hover:shadow hover:shadow-[#F83156] hover:text-[#F83156] hover:bg-white rounded-md w-full sm:w-auto" onClick={onClick}>
       {children}
     </button>
   );
