@@ -268,6 +268,7 @@ const PlanFilter = () => {
               id="departureDate"
               name="departureDate"
               type="date"
+              placeholder="mm/dd/yyyy"
             />
           </div>
           <div className="mt-4">
@@ -277,6 +278,7 @@ const PlanFilter = () => {
               id="arrivalDate"
               name="arrivalDate"
               type="date"
+              placeholder="mm/dd/yyyy"
             />
           </div>
         </div>
