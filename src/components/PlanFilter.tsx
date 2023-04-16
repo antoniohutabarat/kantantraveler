@@ -244,7 +244,7 @@ const PlanFilter = () => {
           <div className="mt-4">
             <label htmlFor="origin-input">Origin</label>
             <input
-            className="w-full"
+              className="w-full appearance-none"
               id="origin-input"
               name="origin-input"
               placeholder="Chicago, IL"
@@ -253,7 +253,7 @@ const PlanFilter = () => {
           <div className="mt-4">
             <label htmlFor="destination-input">Destination</label>
             <input
-            className="w-full"
+              className="w-full appearance-none"
               id="destination-input"
               name="destination-input"
               placeholder="Seattle, WA"
@@ -263,11 +263,21 @@ const PlanFilter = () => {
         <div className="sm:grid sm:grid-cols-2 sm:gap-8">
           <div className="mt-4">
             <label htmlFor="departureDate">Departure Date</label>
-            <input className="w-full" id="departureDate" name="departureDate" type="date" />
+            <input
+              className="w-full appearance-none"
+              id="departureDate"
+              name="departureDate"
+              type="date"
+            />
           </div>
           <div className="mt-4">
             <label htmlFor="arrivalDate">Arrival Date</label>
-            <input className="w-full" id="arrivalDate" name="arrivalDate" type="date" />
+            <input
+              className="w-full appearance-none"
+              id="arrivalDate"
+              name="arrivalDate"
+              type="date"
+            />
           </div>
         </div>
       </div>

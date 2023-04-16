@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 label {
-  @apply w-[200px] block;
+  @apply font-bold;
 }
 input {
   @apply border rounded-md px-2 py-4;
@@ -10,6 +10,10 @@ input {
 
 h2 {
   @apply font-bold;
+}
+
+body {
+  @apply font-nunito;
 }
 
 .switch {
@@ -50,11 +54,11 @@ h2 {
 }
 
 input:checked + .slider {
-  background-color: #F83156;
+  background-color: #f83156;
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px #F83156;
+  box-shadow: 0 0 1px #f83156;
 }
 
 input:checked + .slider:before {
