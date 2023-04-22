@@ -2,6 +2,7 @@ import PlanFilter from "../components/PlanFilter";
 import Stops from "../components/Stops";
 import { createContext, useContext, useEffect, useState } from "react";
 import { Place } from "../models/Place";
+import Notification from "../components/Notificiation";
 
 declare global {
   interface Window {
@@ -27,12 +28,13 @@ export const Home = () => {
   const [map, setMap] = useState<google.maps.Map>();
   const [cities, setCities] = useState<Place[]>([]);
 
-  useEffect(() => {
-    
-  });
+  useEffect(() => {});
 
   return (
     <HomeContext.Provider value={{ map, setMap, cities, setCities }}>
+      <div className="container mx-auto">
+        <Notification />
+      </div>
       <div className="min-h-[calc(70vh_-_80px)]">
         <div className="container mx-auto">
           <PlanFilter />
