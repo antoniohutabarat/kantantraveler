@@ -1,7 +1,7 @@
 export const Footer = () => {
   return (
-    <div className="bg-[#F83156] h-[30vh]">
-      <div className="container mx-auto p-4 sm:px-0 text-white">
+    <div className="bg-secondary h-[30vh]">
+      <div className="container mx-auto p-4 sm:px-0">
         <ul>
           <li>
             <h2>Support</h2>

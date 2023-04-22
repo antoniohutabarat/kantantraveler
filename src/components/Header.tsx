@@ -14,13 +14,13 @@ export const Header = () => {
   ];
 
   return (
-    <div className="border-b shadow-md">
-      <div className="container mx-auto flex items-center">
-        <img
+    <div className="shadow-md bg-primary">
+      <div className="container mx-auto flex items-center h-[80px]">
+        {/* <img
           src={logoImage}
           className="h-[80px] my-4 ml-4 sm:ml-0"
-        />
-        <span className="text-2xl font-bold ml-4 text-[#F83156]">KT</span>
+        /> */}
+        <span className="text-2xl font-bold ml-4 text-background">KT</span>
         {/* <ul className="flex">
           {menus.map((menu, index) => (
             <li key={index} className="p-8">

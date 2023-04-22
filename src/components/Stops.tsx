@@ -22,7 +22,7 @@ const Stops = () => {
                     {cities.map((city, index) => (
                       <li key={index} className="mb-1">
                         <button
-                          className="border border-[#F83156] rounded-md w-full flex justify-between p-4 bg-[#F83156] text-white"
+                          className="rounded-md w-full flex justify-between p-4 bg-primary text-background"
                           onClick={(e: FormEvent<HTMLButtonElement>) => {
                             e.preventDefault();
 
@@ -57,7 +57,7 @@ const Stops = () => {
                           <ul className="grid grid-cols-2">
                             <li className="flex items-center justify-center">
                               <button
-                                className="rounded-md w-[80%] m-4 p-4 text-[#F83156] bg-white shadow hover:shadow-[#F83156]"
+                                className="rounded-md w-[80%] m-4 p-4 bg-secondary text-primary font-bold bg-white shadow hover:shadow-primary"
                                 onClick={(e: FormEvent<HTMLButtonElement>) => {
                                   e.preventDefault();
 
@@ -74,7 +74,7 @@ const Stops = () => {
                             </li>
                             <li className="flex items-center justify-center">
                               <button
-                                className="rounded-md w-[80%] m-4 p-4 text-[#F83156] bg-white shadow hover:shadow-[#F83156]"
+                                className="rounded-md w-[80%] m-4 p-4 bg-secondary text-primary font-bold bg-white shadow hover:shadow-primary"
                                 onClick={(e: FormEvent<HTMLButtonElement>) => {
                                   e.preventDefault();
 
@@ -91,7 +91,7 @@ const Stops = () => {
                             </li>
                             <li className="flex items-center justify-center">
                               <button
-                                className="rounded-md w-[80%] m-4 p-4 text-[#F83156] bg-white shadow hover:shadow-[#F83156]"
+                                className="rounded-md w-[80%] m-4 p-4 bg-secondary text-primary font-bold bg-white shadow hover:shadow-primary"
                                 onClick={(e: FormEvent<HTMLButtonElement>) => {
                                   e.preventDefault();
 
@@ -108,7 +108,7 @@ const Stops = () => {
                             </li>
                             <li className="flex items-center justify-center">
                               <button
-                                className="rounded-md w-[80%] m-4 p-4 text-[#F83156] bg-white shadow hover:shadow-[#F83156]"
+                                className="rounded-md w-[80%] m-4 p-4 bg-secondary text-primary font-bold bg-white shadow hover:shadow-primary"
                                 onClick={(e: FormEvent<HTMLButtonElement>) => {
                                   e.preventDefault();
 
@@ -123,7 +123,7 @@ const Stops = () => {
                             </li>
                             <li className="flex items-center justify-center">
                               <button
-                                className="rounded-md w-[80%] m-4 p-4 text-[#F83156] bg-white shadow hover:shadow-[#F83156]"
+                                className="rounded-md w-[80%] m-4 p-4 bg-secondary text-primary font-bold bg-white shadow hover:shadow-primary"
                                 onClick={(e: FormEvent<HTMLButtonElement>) => {
                                   e.preventDefault();
 

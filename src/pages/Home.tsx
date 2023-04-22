@@ -33,7 +33,7 @@ export const Home = () => {
 
   return (
     <HomeContext.Provider value={{ map, setMap, cities, setCities }}>
-      <div className="min-h-[calc(70vh_-_112px)]">
+      <div className="min-h-[calc(70vh_-_80px)]">
         <div className="container mx-auto">
           <PlanFilter />
         </div>
