@@ -4,30 +4,37 @@ import logoImage from "../images/logo.png";
 export const Header = () => {
   const menus = [
     {
-      title: "Home",
+      title: "Support",
       path: "/",
     },
     {
-      title: "Checkout",
-      path: "/checkout",
+      title: "Trips",
+      path: "/",
+    },
+    {
+      title: "Sign in",
+      path: "/",
     },
   ];
 
   return (
-    <div className="shadow-md bg-primary">
-      <div className="container mx-auto flex items-center h-[80px]">
+    <div className="text-primary">
+      <div className="border-b border-primary container mx-auto flex items-center h-[80px] justify-between">
         {/* <img
           src={logoImage}
           className="h-[80px] my-4 ml-4 sm:ml-0"
         /> */}
-        <span className="text-2xl font-bold ml-4 text-background">KT</span>
-        {/* <ul className="flex">
-          {menus.map((menu, index) => (
-            <li key={index} className="p-8">
-              <NavLink to={menu.path}>{menu.title}</NavLink>
-            </li>
-          ))}
-        </ul> */}
+        <span className="text-2xl font-bold ml-4">KT</span>
+        <div className="flex">
+          <button className="p-8"><i className="fa-solid fa-earth-americas px-2"></i><span>English</span></button>
+          <ul className="flex">
+            {menus.map((menu, index) => (
+              <li key={index} className="p-8">
+                <NavLink to={menu.path}>{menu.title}</NavLink>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   );

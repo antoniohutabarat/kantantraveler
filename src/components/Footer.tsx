@@ -1,17 +1,30 @@
 export const Footer = () => {
   return (
-    <div className="bg-secondary h-[30vh]">
-      <div className="container mx-auto p-4 sm:px-0">
-        <ul>
+    <div className="border-t border-primary h-[30vh] text-primary">
+      <div className="container mx-auto p-4 sm:px-0 flex justify-between">
+        <div className="mt-4">© 2023 KT Inc. All right Reserved.</div>
+        <ul className="flex mt-4 text-4xl">
           <li>
-            <h2>Support</h2>
-            <ul>
-              <li>Help Center</li>
-              <li>Contact Us</li>
-            </ul>
+            <button className="mx-2">
+              <i className="fa-brands fa-square-facebook"></i>
+            </button>
+          </li>
+          <li>
+            <button className="mx-2">
+              <i className="fa-brands fa-square-twitter"></i>
+            </button>
+          </li>
+          <li>
+            <button className="mx-2">
+              <i className="fa-brands fa-square-instagram"></i>
+            </button>
+          </li>
+          <li>
+            <button className="mx-2">
+              <i className="fa-brands fa-linkedin"></i>
+            </button>
           </li>
         </ul>
-        <div className="mt-4">Copyright © 2023 KT Inc.</div>
       </div>
     </div>
   );

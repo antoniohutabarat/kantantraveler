@@ -32,8 +32,29 @@ export const Home = () => {
 
   return (
     <HomeContext.Provider value={{ map, setMap, cities, setCities }}>
-      <div className="container mx-auto">
-        <Notification />
+      <div className="container mx-auto mt-4">
+        <div className="grid grid-cols-2">
+          <ul className="border border-primary flex justify-between">
+            <li>
+              <button className="p-4">Stays</button>
+            </li>
+            <li>
+              <button className="p-4">Flights</button>
+            </li>
+            <li>
+              <button className="p-4">Cars</button>
+            </li>
+            <li>
+              <button className="p-4">Packages</button>
+            </li>
+            <li>
+              <button className="p-4">Things to do</button>
+            </li>
+            <li>
+              <button className="p-4">Cruises</button>
+            </li>
+          </ul>
+        </div>
       </div>
       <div className="min-h-[calc(70vh_-_80px)]">
         <div className="container mx-auto">
